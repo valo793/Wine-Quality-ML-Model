@@ -15,7 +15,7 @@ Este relatório apresenta os achados detalhados obtidos durante a análise explo
 >
 > **Qual o possível impacto no modelo de Machine Learning?**
 > - **Imbalance de Classe**: Apenas 13.91% dos vinhos são de alta qualidade (159 amostras). Modelos preditivos simples focados em acurácia geral serão enviesados e falharão em detectar os vinhos premium. Por isso, a escolha do F1-score e splits estratificados são críticos.
-> - **Variáveis Fortes**: Atributos como `alcohol` e `volatile acidity` serão provavelmente as principais features de decisão de modelos como Random Forest ou XGBoost.
+> - **Variáveis Relevantes**: Atributos como `alcohol` e `volatile acidity` serão provavelmente as principais features de decisão de modelos como Random Forest ou XGBoost.
 > - **Presença de Outliers**: Algumas variáveis (especialmente `residual sugar` e `chlorides`) apresentam percentuais elevados de outliers. Modelos lineares (como Regressão Logística) podem sofrer impacto se esses valores extremos não forem adequadamente tratados, enquanto modelos de árvore (Random Forest) são inerentemente mais robustos a eles.
 >
 > **Qual decisão de negócio esse insight apoia?**
@@ -67,7 +67,7 @@ As matrizes de correlação ilustram também as interações entre as variáveis
 ---
 
 ## 4. Análise de Variáveis Chave
-Os boxplots abaixo ilustram visualmente a distribuição dos três principais fatores associados com vinhos premium (Classe 1) em comparação com vinhos comuns (Classe 0):
+Os boxplots abaixo ilustram visualmente a distribuição das três principais variáveis associadas com vinhos premium (Classe 1) em comparação com vinhos comuns (Classe 0):
 
 ![Impacto das Variáveis Chave](figures/boxplots_by_target.png)
 
@@ -88,8 +88,8 @@ Utilizando a metodologia do Intervalo Interquartil (IQR), mapeamos os valores at
 ---
 
 ## 6. Conclusões e Próximos Passos
-O bootstrap e a análise exploratória comprovam que:
+O bootstrap e a análise exploratória indicam que:
 1. Os dados físico-químicos são consistentes e apresentam associações moderadas e coerentes com a qualidade sensorial do vinho. Em particular, a variável `alcohol` aparece como uma das mais associadas positivamente à alta qualidade, a `volatile acidity` aparece associada negativamente, e os `sulphates` mostram-se também como um atributo relevante. Estes achados preliminares sugerem tendências que deverão ser validadas formalmente na etapa subsequente de modelagem.
 2. A classe de vinhos classificados como premium (`high_quality = 1`) representa uma parcela minoritária da base (apenas 13.91% das amostras). Esse desbalanceamento de classes justifica a adoção de uma divisão de dados estratificada (`stratify=y`) e impõe o uso futuro de métricas robustas de avaliação de classificação, tais como o **F1-Score da Classe 1**, além de **Recall**, **Precision** e **ROC-AUC**, para evitar diagnósticos falsamente otimistas induzidos pela acurácia geral.
 
-Com a fundação visual da EDA estruturada e as tabelas de auditoria salvas em arquivos CSV na pasta `results/metrics/`, o projeto está perfeitamente pronto para a **Fase 3 (Pré-processamento e Feature Engineering)** e o desenvolvimento de modelos.
+Com a fundação visual da EDA estruturada e os dados auditados em arquivos CSV na pasta `results/metrics/`, o projeto está perfeitamente pronto para a **Fase 3 (Pré-processamento e Feature Engineering)** e o desenvolvimento de modelos.

@@ -68,10 +68,10 @@ wine-quality-classification/
 
 ## Fase 2 - Análise Exploratória de Dados (EDA) Concluída
 A análise exploratória de dados foi totalmente concluída e validada localmente, produzindo relatórios consolidados e tabelas analíticas para auditoria:
-* **Relatório Visual Executivo**: [results/eda_report.md](file:///results/eda_report.md) (com análises estatísticas explicadas sob a ótica de negócios, sem afirmações causais).
-* **Gráficos Gerados**: localizados em [results/figures/](file:///results/figures/) (gerados a 300 DPI com paletas corporativas elegantes).
-* **Tabelas de Auditoria e Resumo**: disponíveis em [results/metrics/](file:///results/metrics/) (incluindo `eda_summary.json` e arquivos CSV analíticos).
-* **Script Principal**: [src/eda_generator.py](file:///src/eda_generator.py) (automatiza a extração de métricas e renderização das imagens).
+* **Relatório Visual Executivo**: [results/eda_report.md](results/eda_report.md) (com análises estatísticas explicadas sob a ótica de negócios, sem afirmações causais).
+* **Gráficos Gerados**: localizados em [results/figures/](results/figures/) (gerados a 300 DPI com paletas corporativas elegantes).
+* **Tabelas de Auditoria e Resumo**: disponíveis em [results/metrics/](results/metrics/) (incluindo `eda_summary.json` e arquivos CSV analíticos).
+* **Script Principal**: [src/eda_generator.py](src/eda_generator.py) (automatiza a extração de métricas e renderização das imagens).
 
 
 ---

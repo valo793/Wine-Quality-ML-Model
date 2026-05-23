@@ -194,14 +194,14 @@ Este relatório apresenta os achados detalhados obtidos durante a análise explo
 
 > [!NOTE]
 > **O que foi observado?**
-> A análise estatística identificou que os vinhos classificados como premium (`high_quality = 1`, nota >= 7) apresentam, em média, **teores alcoólicos substancialmente mais elevados** (estando a variável `alcohol` fortemente associada de forma positiva com a qualidade) e **menores concentrações de acidez volátil** (`volatile acidity`, associada de forma negativa). O teor de sulfatos (`sulphates`) também sugere uma tendência positiva moderada de associação com a alta qualidade.
+> A análise estatística identificou que os vinhos classificados como premium (`high_quality = 1`, nota >= 7) apresentam, em média, **teores alcoólicos substancialmente mais elevados** (estando a variável `alcohol` associada de forma moderada e positiva com a qualidade) e **menores concentrações de acidez volátil** (`volatile acidity`, associada de forma negativa). O teor de sulfatos (`sulphates`) também sugere uma tendência positiva moderada de associação com a alta qualidade.
 >
 > **Por que isso importa para a vinícola?**
-> A acidez volátil é gerada principalmente por bactérias acéticas e está associada ao odor de vinagre no vinho. Monitorar ativamente e manter a acidez volátil baixa na produção pode indicar um melhor controle microbiológico e qualidade do produto final. Por outro lado, o teor de álcool e os sulfatos (que agem como antioxidantes e preservativos) indicam que a fermentação e o processo de conservação do vinho são fatores determinantes para a classificação sensorial superior.
+> A acidez volátil é gerada principalmente por bactérias acéticas e está associada ao odor de vinagre no vinho. Monitorar ativamente e manter a acidez volátil baixa na produção pode indicar um melhor controle microbiológico e qualidade do produto final. Por outro lado, o teor de álcool e os sulfatos (que agem como antioxidantes e preservativos) indicam que a fermentação e o processo de conservação do vinho são variáveis fortemente associadas à classificação sensorial superior.
 >
 > **Qual o possível impacto no modelo de Machine Learning?**
 > - **Imbalance de Classe**: Apenas {target_pct.get(1, 0.0):.2f}% dos vinhos são de alta qualidade (159 amostras). Modelos preditivos simples focados em acurácia geral serão enviesados e falharão em detectar os vinhos premium. Por isso, a escolha do F1-score e splits estratificados são críticos.
-> - **Variáveis Fortes**: Atributos como `alcohol` e `volatile acidity` serão provavelmente as principais features de decisão de modelos como Random Forest ou XGBoost.
+> - **Variáveis Relevantes**: Atributos como `alcohol` e `volatile acidity` serão provavelmente as principais features de decisão de modelos como Random Forest ou XGBoost.
 > - **Presença de Outliers**: Algumas variáveis (especialmente `residual sugar` e `chlorides`) apresentam percentuais elevados de outliers. Modelos lineares (como Regressão Logística) podem sofrer impacto se esses valores extremos não forem adequadamente tratados, enquanto modelos de árvore (Random Forest) são inerentemente mais robustos a eles.
 >
 > **Qual decisão de negócio esse insight apoia?**
@@ -230,7 +230,7 @@ Binarizamos a qualidade definindo que notas de 7 a 8 representam a classe positi
 
 ---
 
-## 3. Correlações com a Qualidade do Vinho
+## 3. Associações e Correlações com a Qualidade do Vinho
 
 Avaliamos a relação entre as variáveis através de dois métodos complementares:
 1. **Coeficiente de Pearson**: Mede a correlação linear clássica.
@@ -239,21 +239,21 @@ Avaliamos a relação entre as variáveis através de dois métodos complementar
 ![Associação com high_quality](figures/target_correlation_barplot.png)
 
 ### Principais Associações Identificadas:
-* **Teor Alcoólico (`alcohol`)**: Apresenta a relação positiva mais forte com a qualidade (Pearson: **{corr_with_target.loc["alcohol", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["alcohol", "spearman_correlation"]:.3f}**). Isso sugere uma tendência de que vinhos com maior maturação e fermentação completa sejam mais apreciados pelos avaliadores.
-* **Acidez Volátil (`volatile acidity`)**: Apresenta a correlação negativa mais acentuada com o alvo (Pearson: **{corr_with_target.loc["volatile acidity", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["volatile acidity", "spearman_correlation"]:.3f}**). Níveis elevados de acidez volátil podem indicar a presença de defeitos sensoriais associados à oxidação acética.
-* **Sulfatos (`sulphates`)**: Mostram uma associação positiva moderada (Pearson: **{corr_with_target.loc["sulphates", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["sulphates", "spearman_correlation"]:.3f}**), reforçando que a preservação e estabilização adequadas do vinho desempenham um papel relevante no produto final.
+* **Teor Alcoólico (`alcohol`)**: Apresenta a associação positiva mais marcante (moderada) com a qualidade (Pearson: **{corr_with_target.loc["alcohol", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["alcohol", "spearman_correlation"]:.3f}**). Isso sugere uma tendência de que vinhos com maior maturação e fermentação completa sejam mais apreciados pelos avaliadores.
+* **Acidez Volátil (`volatile acidity`)**: Apresenta a associação negativa mais acentuada (moderada) com o alvo (Pearson: **{corr_with_target.loc["volatile acidity", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["volatile acidity", "spearman_correlation"]:.3f}**). Níveis elevados de acidez volátil podem indicar a presença de defeitos sensoriais associados à oxidação acética.
+* **Sulfatos (`sulphates`)**: Mostram uma associação positiva moderada (Pearson: **{corr_with_target.loc["sulphates", "pearson_correlation"]:.3f}** | Spearman: **{corr_with_target.loc["sulphates", "spearman_correlation"]:.3f}**), reforçando que a preservação e estabilização adequadas do vinho apresentam relação relevante com o produto final.
 
 ### Matrizes de Correlação Completas
 As matrizes de correlação ilustram também as interações entre as variáveis independentes, o que é fundamental para evitar a multicolinearidade em modelos estatísticos.
 
 | Matriz de Pearson (Linear) | Matriz de Spearman (Monotônica) |
 | :---: | :---: |
-| ![Pearson](figures/correlation_matrix_pearson.png) | ![Spearman](figures/figures/correlation_matrix_spearman.png) |
+| ![Pearson](figures/correlation_matrix_pearson.png) | ![Spearman](figures/correlation_matrix_spearman.png) |
 
 ---
 
 ## 4. Análise de Variáveis Chave
-Os boxplots abaixo ilustram visualmente a distribuição dos três principais fatores associados com vinhos premium (Classe 1) em comparação com vinhos comuns (Classe 0):
+Os boxplots abaixo ilustram visualmente a distribuição das três principais variáveis associadas com vinhos premium (Classe 1) em comparação com vinhos comuns (Classe 0):
 
 ![Impacto das Variáveis Chave](figures/boxplots_by_target.png)
 
@@ -274,9 +274,9 @@ Utilizando a metodologia do Intervalo Interquartil (IQR), mapeamos os valores at
 ---
 
 ## 6. Conclusões e Próximos Passos
-O bootstrap e a análise exploratória comprovam que:
-1. Os dados físico-químicos são limpos, consistentes e apresentam fortes correlações com a qualidade percebida.
-2. O desbalanceamento de classes é o maior desafio técnico (apenas {target_pct.get(1, 0.0):.2f}% da classe positiva), o que valida nossa estratégia de utilizar splits estratificados e focar na otimização do **F1-Score da Classe 1**.
+O bootstrap e a análise exploratória indicam que:
+1. Os dados físico-químicos são consistentes e apresentam associações moderadas e coerentes com a qualidade sensorial do vinho. Em particular, a variável `alcohol` aparece como uma das mais associadas positivamente à alta qualidade, a `volatile acidity` aparece associada negativamente, e os `sulphates` mostram-se também como um atributo relevante. Estes achados preliminares sugerem tendências que deverão ser validadas formalmente na etapa subsequente de modelagem.
+2. A classe de vinhos classificados como premium (`high_quality = 1`) representa uma parcela minoritária da base (apenas {target_pct.get(1, 0.0):.2f}% das amostras). Esse desbalanceamento de classes justifica a adoção de uma divisão de dados estratificada (`stratify=y`) e impõe o uso futuro de métricas robustas de avaliação de classificação, tais como o **F1-Score da Classe 1**, além de **Recall**, **Precision** e **ROC-AUC**, para evitar diagnósticos falsamente otimistas induzidos pela acurácia geral.
 
 Com a fundação visual da EDA estruturada e os dados auditados em arquivos CSV na pasta `results/metrics/`, o projeto está perfeitamente pronto para a **Fase 3 (Pré-processamento e Feature Engineering)** e o desenvolvimento de modelos.
 """
