@@ -1,0 +1,60 @@
+{
+    "dimensions": {
+        "rows": 1143,
+        "columns": 14
+    },
+    "original_quality_distribution": {
+        "3": 6,
+        "4": 33,
+        "5": 483,
+        "6": 462,
+        "7": 143,
+        "8": 16
+    },
+    "binary_target_distribution": {
+        "0": 984,
+        "1": 159
+    },
+    "high_quality_percentage": 13.910761154855644,
+    "top_associations": {
+        "strongest_positive_correlation": {
+            "variable": "alcohol",
+            "pearson": 0.4036762615909753,
+            "spearman": 0.3828295623037244
+        },
+        "strongest_negative_correlation": {
+            "variable": "volatile acidity",
+            "pearson": -0.30452321258483783,
+            "spearman": -0.3259932573693081
+        }
+    },
+    "outliers_count_per_feature": {
+        "fixed acidity": 44,
+        "volatile acidity": 14,
+        "citric acid": 1,
+        "residual sugar": 110,
+        "chlorides": 77,
+        "free sulfur dioxide": 18,
+        "total sulfur dioxide": 40,
+        "density": 36,
+        "pH": 20,
+        "sulphates": 43,
+        "alcohol": 12
+    },
+    "missing_values_per_feature": {
+        "fixed acidity": 0,
+        "volatile acidity": 0,
+        "citric acid": 0,
+        "residual sugar": 0,
+        "chlorides": 0,
+        "free sulfur dioxide": 0,
+        "total sulfur dioxide": 0,
+        "density": 0,
+        "pH": 0,
+        "sulphates": 0,
+        "alcohol": 0,
+        "quality": 0,
+        "Id": 0,
+        "high_quality": 0
+    }
+}
