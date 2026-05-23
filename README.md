@@ -30,35 +30,49 @@ wine-quality-classification/
 │
 ├── data/
 │   ├── raw/                # Dados brutos originais (baixados via script, ignorados no Git)
+│   │   └── .gitkeep        # Arquivo de rastreio de diretório
 │   └── processed/          # Dados após split e transformações (ignorados no Git)
+│       └── .gitkeep        # Arquivo de rastreio de diretório
 │
 ├── notebooks/
 │   ├── 01_eda.ipynb        # Análise Exploratória de Dados (EDA)
-│   ├── 02_modelagem.ipynb  # Treinamento e comparação de modelos
-│   └── 03_interpretabilidade.ipynb # Explicabilidade (SHAP / Feature Importance)
+│   ├── 02_modelagem.ipynb  # Treinamento e comparação de modelos (etapas futuras)
+│   └── 03_interpretabilidade.ipynb # Explicabilidade (SHAP / Feature Importance) (etapas futuras)
 │
 ├── src/
 │   ├── __init__.py         # Inicialização do pacote python
 │   ├── data_loader.py      # Script de carregamento automatizado do dataset (com fallback)
 │   ├── preprocessing.py    # Pré-processamento e split treino/teste estratificado
-│   ├── features.py         # Engenharia de atributos (etapas futuras)
-│   ├── train.py            # Treinamento de modelos (etapas futuras)
-│   ├── evaluate.py         # Avaliação e geração de relatórios de métricas (etapas futuras)
-│   ├── plots.py            # Geração de gráficos corporativos e relatórios visuais (etapas futuras)
+│   ├── features.py         # Engenharia de atributos (esqueleto para etapas futuras)
+│   ├── train.py            # Treinamento de modelos (esqueleto para etapas futuras)
+│   ├── evaluate.py         # Avaliação de métricas (esqueleto com foco em F1-score)
+│   ├── plots.py            # Biblioteca de geração de gráficos corporativos (300 DPI)
+│   ├── eda_generator.py    # Pipeline completa de execução da EDA e geração de relatórios
 │   └── validate_bootstrap.py # Validador automático da pipeline inicial de bootstrap
 │
 ├── results/
-│   ├── figures/            # Gráficos e visualizações salvas para a apresentação
-│   ├── metrics/            # Arquivos JSON/CSV com resultados comparativos
-│   └── models/             # Serialização dos modelos treinados (ex: .pkl, .joblib)
+│   ├── eda_report.md       # Relatório executivo de EDA consolidado com imagens embutidas
+│   ├── figures/            # Gráficos em 300 DPI (quality_distribution.png, target_balance.png, etc.)
+│   ├── metrics/            # Estatísticas em JSON (eda_summary.json) e CSVs para auditoria
+│   └── models/             # Serialização dos modelos treinados (esqueleto)
 │
 ├── presentation/
 │   └── README.md           # Planejamento e base para a futura apresentação executiva
 │
 ├── .gitignore              # Configurações de arquivos ignorados pelo git
 ├── requirements.txt        # Dependências do projeto
-└── README.md               # Documentação inicial do projeto (este arquivo)
+└── README.md               # Documentação do projeto (este arquivo)
 ```
+
+---
+
+## Fase 2 - Análise Exploratória de Dados (EDA) Concluída
+A análise exploratória de dados foi totalmente concluída e validada localmente, produzindo relatórios consolidados e tabelas analíticas para auditoria:
+* **Relatório Visual Executivo**: [results/eda_report.md](file:///results/eda_report.md) (com análises estatísticas explicadas sob a ótica de negócios, sem afirmações causais).
+* **Gráficos Gerados**: localizados em [results/figures/](file:///results/figures/) (gerados a 300 DPI com paletas corporativas elegantes).
+* **Tabelas de Auditoria e Resumo**: disponíveis em [results/metrics/](file:///results/metrics/) (incluindo `eda_summary.json` e arquivos CSV analíticos).
+* **Script Principal**: [src/eda_generator.py](file:///src/eda_generator.py) (automatiza a extração de métricas e renderização das imagens).
+
 
 ---
 
@@ -115,8 +129,9 @@ Esse validador executará o download do dataset usando `kagglehub` (com fallback
 ---
 
 ## Próximos Passos de Desenvolvimento
-1. **EDA Completa**: Análise detalhada de outliers, correlações e distribuições no notebook `01_eda.ipynb`.
-2. **Engenharia de Atributos**: Implementação de variáveis de negócio no arquivo `src/features.py` (ex: `sulfur_ratio`, `acidity_balance`, `alcohol_density_ratio`).
-3. **Modelagem de Algoritmos**: Implementação de classificadores base (Regressão Logística) e avançados (Random Forest, XGBoost) no notebook `02_modelagem.ipynb` e `src/train.py`.
-4. **Explicabilidade**: Uso de SHAP para entender as decisões do modelo (`notebooks/03_interpretabilidade.ipynb`).
-5. **Apresentação de Storytelling**: Futura interface HTML/JS integrada para comunicação de resultados corporativos.
+1. **Fase 3: Pré-processamento e Feature Engineering**: Implementação de variáveis de negócio no arquivo `src/features.py` (ex: `sulfur_ratio`, `acidity_balance`, `alcohol_density_ratio`, `sugar_alcohol_ratio`).
+2. **Fase 4: Modelagem**: Treinamento de pelo menos dois modelos de classificação (ex: Regressão Logística como baseline, Random Forest, XGBoost) no notebook `notebooks/02_modelagem.ipynb` e `src/train.py`.
+3. **Fase 5: Avaliação Comparativa**: Comparação sistemática de performance entre os modelos usando métricas estruturadas (`src/evaluate.py`).
+4. **Fase 6: Interpretação dos Modelos**: Uso de SHAP e análise de importância de atributos para explicabilidade (`notebooks/03_interpretabilidade.ipynb`).
+5. **Fase 7: Storytelling Executivo e Apresentação**: Construção do material dinâmico em HTML/JS integrado para a diretoria, simulador de predições e roteiro para o vídeo de pitch de 5 minutos.
+
