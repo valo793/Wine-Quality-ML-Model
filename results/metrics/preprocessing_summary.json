@@ -1,0 +1,34 @@
+{
+    "total_rows": 1143,
+    "num_original_features": 11,
+    "num_created_features": 4,
+    "num_final_features": 15,
+    "train_size": 914,
+    "test_size": 229,
+    "class_1_proportion_total": 0.13910761154855644,
+    "class_1_proportion_train": 0.1389496717724289,
+    "class_1_proportion_test": 0.13973799126637554,
+    "default_scaler_chosen": "standard",
+    "columns_removed": [
+        "quality",
+        "high_quality",
+        "Id"
+    ],
+    "columns_used_in_model": [
+        "fixed acidity",
+        "volatile acidity",
+        "citric acid",
+        "residual sugar",
+        "chlorides",
+        "free sulfur dioxide",
+        "total sulfur dioxide",
+        "density",
+        "pH",
+        "sulphates",
+        "alcohol",
+        "sulfur_ratio",
+        "acidity_balance",
+        "alcohol_density_ratio",
+        "sugar_alcohol_ratio"
+    ]
+}

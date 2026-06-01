@@ -43,6 +43,7 @@ def split_data(
     """
     Separa o DataFrame em features (X) e target (y), e realiza um split estratificado
     em treino e teste para lidar com o desbalanceamento das classes.
+    Garante que colunas indesejadas (quality, Id, etc.) sejam removidas das features preditivas.
     
     Parameters:
     -----------
@@ -68,15 +69,15 @@ def split_data(
     if drop_cols is None:
         drop_cols = []
         
-    # Garante que a coluna de target original 'quality' (se presente) e outras colunas indesejadas
-    # sejam removidas das features de treino/teste para evitar Target Leakage
-    cols_to_drop = list(set([target_col] + drop_cols))
+    # Garante que 'quality' (se presente) e variações de 'Id' / 'id' sejam removidas
+    default_drops = ["quality", "Id", "id", "ID"]
+    cols_to_drop = list(set([target_col] + drop_cols + default_drops))
     cols_to_drop = [c for c in cols_to_drop if c in df.columns]
     
     X = df.drop(columns=cols_to_drop)
     y = df[target_col]
     
-    print(f"Separando features e alvo. Colunas dropadas das features: {cols_to_drop}")
+    print(f"Separando features e alvo. Colunas removidas das features: {cols_to_drop}")
     print(f"Features finais (X): {list(X.columns)}")
     
     # Realiza o split estratificado garantindo que a proporção das classes se mantenha estável
@@ -92,3 +93,40 @@ def split_data(
     print(f" - Teste: {X_test.shape[0]} amostras")
     
     return X_train, X_test, y_train, y_test
+
+def create_preprocessing_pipeline(scaler: str = "standard"):
+    """
+    Cria e retorna um pipeline scikit-learn contendo imputação e escalonamento numérico.
+    
+    Parameters:
+    -----------
+    scaler : str, default="standard"
+        Tipo de scaler a ser aplicado:
+        - "standard": Aplica StandardScaler.
+        - "robust": Aplica RobustScaler.
+        - None ou "none": Não aplica scaler (apenas imputação).
+        
+    Returns:
+    --------
+    Pipeline
+        Pipeline scikit-learn estruturado.
+    """
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import StandardScaler, RobustScaler
+    
+    steps = [
+        ("imputer", SimpleImputer(strategy="median"))
+    ]
+    
+    if scaler == "standard":
+        steps.append(("scaler", StandardScaler()))
+        print("Pipeline de pré-processamento criado com imputador (mediana) e StandardScaler.")
+    elif scaler == "robust":
+        steps.append(("scaler", RobustScaler()))
+        print("Pipeline de pré-processamento criado com imputador (mediana) e RobustScaler.")
+    else:
+        print("Pipeline de pré-processamento criado com imputador (mediana) e sem Scaler.")
+        
+    return Pipeline(steps)
+

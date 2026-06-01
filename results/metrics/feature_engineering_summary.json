@@ -1,0 +1,22 @@
+{
+    "sulfur_ratio": {
+        "formula": "free sulfur dioxide / (total sulfur dioxide + epsilon)",
+        "business_justification": "Mede a fração de dióxido de enxofre ativo (livre) que efetivamente age contra a oxidação microbiológica do vinho, em relação ao enxofre total.",
+        "technical_care": "Divisão protegida usando constante epsilon (1e-8) para evitar erro ZeroDivisionError caso a variável de total sulfur dioxide seja 0."
+    },
+    "acidity_balance": {
+        "formula": "fixed acidity - volatile acidity",
+        "business_justification": "Representa o balanço de acidez no paladar, contrastando a acidez física estrutural desejável com a acidez acética indesejável (sabor de vinagre).",
+        "technical_care": "Subtração direta sem riscos de divisão. Mantém a escala original das grandezas físicas."
+    },
+    "alcohol_density_ratio": {
+        "formula": "alcohol / (density + epsilon)",
+        "business_justification": "Analisa o teor de álcool em relação à densidade geral do vinho. Como o álcool é menos denso que a água, a razão fornece um indicador indireto de corpo e maturação.",
+        "technical_care": "Divisão protegida com constante epsilon (1e-8) para estabilidade numérica e consistência matemática."
+    },
+    "sugar_alcohol_ratio": {
+        "formula": "residual sugar / (alcohol + epsilon)",
+        "business_justification": "Avalia o açúcar residual não fermentado em proporção ao álcool produzido, indicando a doçura percebida em relação ao calor alcoólico.",
+        "technical_care": "Divisão protegida com constante epsilon (1e-8) para evitar interrupções caso o teor de álcool de algum registro seja zero."
+    }
+}

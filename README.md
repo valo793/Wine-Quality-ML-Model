@@ -36,24 +36,25 @@ wine-quality-classification/
 │
 ├── notebooks/
 │   ├── 01_eda.ipynb        # Análise Exploratória de Dados (EDA)
-│   ├── 02_modelagem.ipynb  # Treinamento e comparação de modelos (etapas futuras)
+│   ├── 02_modelagem.ipynb  # Treinamento e preparação de dados para modelagem (Fase 3)
 │   └── 03_interpretabilidade.ipynb # Explicabilidade (SHAP / Feature Importance) (etapas futuras)
 │
 ├── src/
 │   ├── __init__.py         # Inicialização do pacote python
 │   ├── data_loader.py      # Script de carregamento automatizado do dataset (com fallback)
-│   ├── preprocessing.py    # Pré-processamento e split treino/teste estratificado
-│   ├── features.py         # Engenharia de atributos (esqueleto para etapas futuras)
+│   ├── preprocessing.py    # Pré-processamento, split estratificado e pipeline scikit-learn
+│   ├── features.py         # Engenharia de atributos com tratamento contra divisão por zero
 │   ├── train.py            # Treinamento de modelos (esqueleto para etapas futuras)
-│   ├── evaluate.py         # Avaliação de métricas (esqueleto com foco em F1-score)
+│   ├── evaluate.py         # Avaliação de classificadores (esqueleto com foco em F1-score)
 │   ├── plots.py            # Biblioteca de geração de gráficos corporativos (300 DPI)
 │   ├── eda_generator.py    # Pipeline completa de execução da EDA e geração de relatórios
+│   ├── preprocessing_generator.py # Pipeline de feature engineering e splits da Fase 3
 │   └── validate_bootstrap.py # Validador automático da pipeline inicial de bootstrap
 │
 ├── results/
 │   ├── eda_report.md       # Relatório executivo de EDA consolidado com imagens embutidas
-│   ├── figures/            # Gráficos em 300 DPI (quality_distribution.png, target_balance.png, etc.)
-│   ├── metrics/            # Estatísticas em JSON (eda_summary.json) e CSVs para auditoria
+│   ├── figures/            # Gráficos em 300 DPI (quality_distribution, target_balance, etc.)
+│   ├── metrics/            # Estatísticas em JSON (eda_summary, preprocessing_summary) e CSVs para auditoria
 │   └── models/             # Serialização dos modelos treinados (esqueleto)
 │
 ├── presentation/
@@ -73,8 +74,34 @@ A análise exploratória de dados foi totalmente concluída e validada localment
 * **Tabelas de Auditoria e Resumo**: disponíveis em [results/metrics/](results/metrics/) (incluindo `eda_summary.json` e arquivos CSV analíticos).
 * **Script Principal**: [src/eda_generator.py](src/eda_generator.py) (automatiza a extração de métricas e renderização das imagens).
 
-
 ---
+
+## Fase 3 - Pré-processamento e Feature Engineering (Implementado Localmente)
+> [!IMPORTANT]
+> **Status de Progresso**: Esta fase foi totalmente implementada e validada de forma estritamente local. As alterações estão salvas localmente e aguardando revisão e autorização formal do usuário antes de serem commitadas ou enviadas para o GitHub (Push).
+
+As seguintes entregas técnicas foram implementadas:
+1. **Remoção de Colunas de Controle/Target**: Garantida a remoção de `quality` (original), `high_quality` (alvo) e `Id`/`id` das variáveis preditoras para evitar qualquer tipo de *target leakage*.
+2. **Divisão Estratificada**: A separação treino (80%) e teste (20%) foi implementada com a opção `stratify=y`, garantindo que a base de treino e teste preservem exatamente a proporção original de vinhos premium (em torno de 13.91%), combatendo o desbalanceamento de classes de forma cientificamente coerente.
+3. **Engenharia de Atributos (`src/features.py`)**: Geração de 4 novas features físico-químicas combinadas com o uso obrigatório de constante *epsilon* (`1e-8`) contra divisões por zero:
+   - `sulfur_ratio`: Razão entre enxofre ativo (livre) e enxofre total.
+   - `acidity_balance`: Equilíbrio químico de acidez útil vs acidez acética.
+   - `alcohol_density_ratio`: Relação de corpo e maturação do vinho.
+   - `sugar_alcohol_ratio`: Razão de doçura percebida em relação ao calor alcoólico.
+4. **Pipeline scikit-learn (`src/preprocessing.py`)**: Pipeline contendo `SimpleImputer` (imputação por mediana) e suporte a escalonamento dinâmico (`StandardScaler` ou `RobustScaler`). O pipeline é ajustado (*fit*) apenas nos dados de treino para evitar *data leakage*.
+5. **Orquestrador de Processamento (`src/preprocessing_generator.py`)**: Script que roda a pipeline e exporta os resumos.
+
+### Arquivos Gerados em `results/metrics/`:
+- `preprocessing_summary.json`: Metadados estruturados dos splits, contagem de features e scaler padrão utilizado.
+- `feature_engineering_summary.json`: Justificativa teórica e de negócios para cada atributo gerado.
+- `train_test_split_summary.csv`: Auditoria de distribuição absoluta e percentual das classes em cada divisão de dados.
+- `feature_list.csv`: Lista das features finais a serem alimentadas no modelo.
+
+### Como Executar a Fase 3 Localmente:
+```bash
+.\.venv\Scripts\python.exe -m src.preprocessing_generator
+```
+
 
 ## Como Instalar as Dependências
 
