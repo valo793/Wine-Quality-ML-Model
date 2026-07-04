@@ -23,11 +23,11 @@
             --wine-dark: #4A0E2E;
             --wine-primary: #8B1C31;
             --wine-glow: rgba(139, 28, 49, 0.4);
-            --gold-accent: #D4AF37;
+            --accent-color: #38BDF8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
             --text-main: #F4F4F4;
             --text-muted: #B3B3B3;
             --glass-bg: rgba(30, 26, 28, 0.6);
-            --glass-border: rgba(212, 175, 55, 0.2);
         }
 
         body, .reveal-viewport {
@@ -52,7 +52,7 @@
 
         .reveal h1 { font-size: 3.5em; font-weight: 800; line-height: 1.1; }
         .reveal h2 { font-size: 2.2em; border-bottom: 2px solid var(--wine-primary); display: inline-block; padding-bottom: 10px; margin-bottom: 40px; }
-        .reveal h3 { font-size: 1.5em; color: var(--gold-accent); font-family: 'Montserrat', sans-serif; font-weight: 300; }
+        .reveal h3 { font-size: 1.5em; color: var(--accent-color); font-family: 'Montserrat', sans-serif; font-weight: 300; }
         
         .reveal p, .reveal li {
             font-size: 0.85em;
@@ -61,7 +61,7 @@
         }
 
         .reveal strong {
-            color: var(--gold-accent);
+            color: var(--accent-color);
             font-weight: 600;
         }
 
@@ -78,22 +78,22 @@
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            border: none;
             border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px var(--wine-glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .glass-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px var(--wine-glow);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px var(--accent-glow);
         }
 
         .metric {
             font-size: 3em !important;
             font-family: 'Playfair Display', serif;
-            color: var(--gold-accent);
+            color: var(--accent-color);
             margin: 10px 0;
             text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
@@ -117,13 +117,13 @@
 
         .reveal th {
             background: rgba(139, 28, 49, 0.3);
-            color: var(--gold-accent);
+            color: var(--accent-color);
             font-weight: 600;
         }
 
         .reveal tr.winner {
             background: rgba(212, 175, 55, 0.1);
-            border-left: 4px solid var(--gold-accent);
+            border-left: 4px solid var(--accent-color);
         }
         .reveal tr.winner td { color: var(--text-main); font-weight: 600; }
 
@@ -135,7 +135,7 @@
             font-size: 0.8em;
             font-weight: 600;
         }
-        .tag.premium { background: rgba(212, 175, 55, 0.2); color: var(--gold-accent); border: 1px solid var(--gold-accent); }
+        .tag.premium { background: rgba(212, 175, 55, 0.2); color: var(--accent-color); border: 1px solid var(--accent-color); }
         .tag.regular { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); border: 1px solid var(--text-muted); }
 
         /* Imagens */
@@ -154,7 +154,6 @@
 
         .img-container img {
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             max-height: 400px;
             max-width: 100%;
             object-fit: contain;
@@ -170,7 +169,7 @@
             color: #fff; font-weight: bold; border-radius: 6px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .pyramid .top { width: 40%; height: 60px; background: linear-gradient(135deg, var(--gold-accent), #9e8125); font-size: 1.1em;}
+        .pyramid .top { width: 40%; height: 60px; background: linear-gradient(135deg, var(--accent-color), #0284C7); font-size: 1.1em;}
         .pyramid .bottom { width: 80%; height: 80px; background: linear-gradient(135deg, var(--wine-primary), var(--wine-dark)); font-size: 1.2em;}
 
         /* Lista estilizada com ícones */
@@ -186,7 +185,7 @@
 
             <!-- CAPA -->
             <section data-background-gradient="radial-gradient(circle at center, #2a0815 0%, #121011 70%)">
-                <h1 class="r-fit-text">Qualidade de Vinhos<br><span style="color: var(--gold-accent);">Machine Learning</span></h1>
+                <h1 class="r-fit-text">Qualidade de Vinhos<br><span style="color: var(--accent-color);">Machine Learning</span></h1>
                 <h3>Tech Challenge - Pós-Tech Data Analytics - Fase 2</h3>
                 <p style="margin-top: 40px; font-size: 1.2em; font-style: italic;">
                     Uma abordagem baseada em dados para otimização da produção vinícola.
@@ -207,7 +206,7 @@
                         </ul>
                     </div>
                     <div class="glass-card fragment fade-left">
-                        <i class="fa-solid fa-bullseye" style="font-size: 2.5em; color: var(--gold-accent);"></i>
+                        <i class="fa-solid fa-bullseye" style="font-size: 2.5em; color: var(--accent-color);"></i>
                         <h4 style="margin-top: 15px; color: var(--text-main);">Objetivo do Negócio</h4>
                         <div class="metric">Prever a Qualidade</div>
                         <p style="margin-top: 15px;">Classificar automaticamente lotes com alto potencial comercial através de dados físico-químicos antes da avaliação sensorial.</p>
@@ -286,7 +285,7 @@
                             <td>0.912</td>
                         </tr>
                         <tr class="winner fragment highlight-current-blue">
-                            <td><i class="fa-solid fa-trophy" style="color: var(--gold-accent); margin-right: 5px;"></i> Gradient Boosting</td>
+                            <td><i class="fa-solid fa-trophy" style="color: var(--accent-color); margin-right: 5px;"></i> Gradient Boosting</td>
                             <td>0.677</td>
                             <td>0.700</td>
                             <td>0.656</td>
@@ -336,7 +335,7 @@
                             <td>Linha de envelhecimento especial (barricas de carvalho); <strong>precificação elevada</strong>.</td>
                         </tr>
                         <tr>
-                            <td style="color: var(--gold-accent); font-weight: bold; font-size: 1.2em;">50% a 79%</td>
+                            <td style="color: var(--accent-color); font-weight: bold; font-size: 1.2em;">50% a 79%</td>
                             <td><span class="tag regular">Intermediária</span></td>
                             <td><strong>Revisão pelo enólogo chefe</strong> para ajustes químicos finos.</td>
                         </tr>
@@ -351,14 +350,14 @@
 
             <!-- CONCLUSÃO -->
             <section data-background-gradient="radial-gradient(circle at center, #121011 0%, #2a0815 100%)">
-                <i class="fa-solid fa-award" style="font-size: 4em; color: var(--gold-accent); margin-bottom: 20px;"></i>
+                <i class="fa-solid fa-award" style="font-size: 4em; color: var(--accent-color); margin-bottom: 20px;"></i>
                 <h2>Conclusão</h2>
                 <p class="fragment" style="font-size: 1.2em; max-width: 800px; margin: 0 auto 30px;">
                     O <strong>Gradient Boosting</strong> demonstrou ser uma ferramenta altamente viável. 
                     Atingimos <strong>91% de acurácia global</strong> com forte capacidade na classe premium.
                 </p>
-                <div class="glass-card fragment" style="max-width: 800px; margin: 0 auto; border-color: var(--gold-accent);">
-                    <p style="color: var(--gold-accent); font-size: 1.1em; font-family: 'Playfair Display', serif; font-style: italic; margin: 0;">
+                <div class="glass-card fragment" style="max-width: 800px; margin: 0 auto; border-color: var(--accent-color);">
+                    <p style="color: var(--accent-color); font-size: 1.1em; font-family: 'Playfair Display', serif; font-style: italic; margin: 0;">
                         "Mais do que apenas prever, a interpretabilidade revelou alavancas acionáveis que os produtores podem ajustar durante a fermentação."
                     </p>
                 </div>
