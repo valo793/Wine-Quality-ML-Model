@@ -34,14 +34,7 @@
 
         /* Hide scrollbar for a seamless presentation look */
         ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            display: none;
         }
 
         /* Slide Sections */
@@ -424,5 +417,50 @@
         <div class="slide-number">8 / 8</div>
     </section>
 
+    <script>
+        // Lógica de Apresentação (Slides)
+        const sections = document.querySelectorAll('section');
+        let currentSlide = 0;
+        let isAnimating = false;
+
+        function scrollToSlide(index) {
+            if (index < 0 || index >= sections.length) return;
+            isAnimating = true;
+            currentSlide = index;
+            sections[currentSlide].scrollIntoView({ behavior: 'smooth' });
+            
+            // Previne scrolls múltiplos muito rápidos
+            setTimeout(() => {
+                isAnimating = false;
+            }, 800);
+        }
+
+        // Navegação por Teclado
+        document.addEventListener('keydown', (e) => {
+            if (isAnimating) return;
+            
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault();
+                scrollToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                scrollToSlide(currentSlide - 1);
+            }
+        });
+
+        // Atualiza o índice do slide se o usuário rolar com o mouse/touch
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const scrollPosition = window.scrollY + (window.innerHeight / 2);
+                sections.forEach((section, index) => {
+                    if (section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
+                        currentSlide = index;
+                    }
+                });
+            }, 100);
+        });
+    </script>
 </body>
 </html>
