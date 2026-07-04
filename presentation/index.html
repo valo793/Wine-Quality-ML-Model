@@ -30,8 +30,8 @@
             --glass-border: rgba(212, 175, 55, 0.2);
         }
 
-        body {
-            background-color: var(--bg-dark);
+        body, .reveal-viewport {
+            background-color: var(--bg-dark) !important;
         }
 
         /* ==========================================
@@ -155,7 +155,8 @@
         .img-container img {
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            max-height: 50vh;
+            max-height: 400px;
+            max-width: 100%;
             object-fit: contain;
             /* Inverte as cores e aplica o lighten para o fundo preto da imagem virar a cor de fundo do container */
             filter: invert(1) hue-rotate(180deg);
