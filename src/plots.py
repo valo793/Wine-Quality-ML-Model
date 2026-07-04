@@ -51,7 +51,7 @@ def plot_quality_distribution(df: pd.DataFrame, save_path: str):
     plt.ylabel("Quantidade de Amostras", fontsize=10, labelpad=8)
     sns.despine(left=True, bottom=True)
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -96,7 +96,7 @@ def plot_target_balance(df: pd.DataFrame, save_path: str):
     plt.xticks([0, 1], ["Baixa/Média Qualidade (< 7)", "Alta Qualidade (>= 7)"])
     sns.despine(left=True, bottom=True)
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -130,7 +130,7 @@ def plot_numeric_distributions(df: pd.DataFrame, numeric_cols: list, save_path: 
         
     plt.suptitle("Distribuições das Variáveis Físico-Químicas", fontsize=16, weight="bold", y=0.98, color="#1a202c")
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -172,7 +172,7 @@ def plot_correlation_matrix(df: pd.DataFrame, method: str, save_path: str):
     plt.xticks(rotation=45, ha='right', fontsize=9)
     plt.yticks(fontsize=9)
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -214,7 +214,7 @@ def plot_target_correlation(pearson_corr: pd.Series, spearman_corr: pd.Series, s
     plt.legend(title="Método de Análise", frameon=True)
     sns.despine(left=True, bottom=True)
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -248,7 +248,7 @@ def plot_boxplots_by_target(df: pd.DataFrame, key_features: list, save_path: str
         
     plt.suptitle("Diferenças nos Atributos Químicos por Categoria de Qualidade", fontsize=15, weight="bold", y=1.02, color="#1a202c")
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
@@ -293,7 +293,7 @@ def plot_outliers_overview(outliers_dict: dict, save_path: str):
     plt.ylabel("")
     sns.despine(left=True, bottom=True)
     plt.tight_layout()
-    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.savefig(save_path, dpi=300, bbox_inches="tight", transparent=True)
     plt.close()
     print(f"Gráfico salvo: {save_path}")
 
