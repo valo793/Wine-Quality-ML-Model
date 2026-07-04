@@ -1,506 +1,388 @@
-<!-- LinkedIn Post: Acabei de concluir meu projeto de Machine Learning para classificação de qualidade de vinhos! 🍷📊 Utilizando Gradient Boosting e análise SHAP, identifiquei as variáveis físico-químicas mais influentes na qualidade premium. O modelo atinge F1-Score de 0.68 na classe minoritária com ROC-AUC de 0.90. Tech Challenge da Pós-Tech em Data Analytics (Fase 2). Confira o repositório: https://github.com/valo793/Wine-Quality-ML-Model #MachineLearning #DataScience #WineQuality #Python #ScikitLearn #SHAP #PostechFIAP -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação Executiva - Qualidade de Vinhos</title>
+    
+    <!-- Fonte e Ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Reveal.js Core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
+        /* ==========================================
+           PALETA DE CORES E VARIÁVEIS "WINE & TECH"
+           ========================================== */
         :root {
-            --bg-color: #0f172a;
-            --text-color: #f8fafc;
-            --accent-color: #e11d48;
-            --accent-glow: rgba(225, 29, 72, 0.3);
-            --card-bg: rgba(30, 41, 59, 0.4);
-            --border-color: rgba(51, 65, 85, 0.5);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --bg-dark: #121011;
+            --wine-dark: #4A0E2E;
+            --wine-primary: #8B1C31;
+            --wine-glow: rgba(139, 28, 49, 0.4);
+            --gold-accent: #D4AF37;
+            --text-main: #F4F4F4;
+            --text-muted: #B3B3B3;
+            --glass-bg: rgba(30, 26, 28, 0.6);
+            --glass-border: rgba(212, 175, 55, 0.2);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+            background-color: var(--bg-dark);
         }
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        section {
-            height: 100vh;
-            width: 100vw;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            padding: 4rem 6rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            background: radial-gradient(circle at top right, rgba(30, 41, 59, 0.3) 0%, transparent 60%);
-        }
-
-        /* Animations */
+        /* ==========================================
+           TIPOGRAFIA GLOBAL (Reveal.js Overrides)
+           ========================================== */
         .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
         }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Playfair Display', serif;
+            text-transform: none;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
         }
 
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
-        .delay-4 { transition-delay: 0.4s; }
-
-        h1 {
-            font-size: 4.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #e11d48, #f43f5e, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.1;
+        .reveal h1 { font-size: 3.5em; font-weight: 800; line-height: 1.1; }
+        .reveal h2 { font-size: 2.2em; border-bottom: 2px solid var(--wine-primary); display: inline-block; padding-bottom: 10px; margin-bottom: 40px; }
+        .reveal h3 { font-size: 1.5em; color: var(--gold-accent); font-family: 'Montserrat', sans-serif; font-weight: 300; }
+        
+        .reveal p, .reveal li {
+            font-size: 0.85em;
+            line-height: 1.6;
+            color: var(--text-muted);
         }
 
-        h2 {
-            font-size: 2.8rem;
-            margin-bottom: 2rem;
-            border-bottom: 3px solid var(--accent-color);
-            padding-bottom: 0.5rem;
-            display: inline-block;
+        .reveal strong {
+            color: var(--gold-accent);
+            font-weight: 600;
         }
 
-        h3 {
-            font-size: 1.8rem;
-            color: #94a3b8;
-            font-weight: 400;
-        }
-
-        p, ul, ol {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            color: #cbd5e1;
-        }
-
-        li {
-            margin-bottom: 0.8rem;
-        }
-
+        /* ==========================================
+           COMPONENTES VISUAIS (Cards, Grids, Tabelas)
+           ========================================== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 40px;
             align-items: center;
         }
 
-        .card {
-            background: var(--card-bg);
-            padding: 2.5rem;
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(12px);
-            text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 15px var(--accent-glow);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transition: transform 0.3s ease;
         }
-
-        .card:hover {
+        
+        .glass-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--wine-glow);
         }
 
-        .card h4 {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            color: #94a3b8;
+        .metric {
+            font-size: 3em !important;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-accent);
+            margin: 10px 0;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
-        .card .metric {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--accent-color);
+        /* Tabela Estilizada */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75em;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
         }
 
+        .reveal th, .reveal td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .reveal th {
+            background: rgba(139, 28, 49, 0.3);
+            color: var(--gold-accent);
+            font-weight: 600;
+        }
+
+        .reveal tr.winner {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold-accent);
+        }
+        .reveal tr.winner td { color: var(--text-main); font-weight: 600; }
+
+        /* Tags de Status */
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .tag.premium { background: rgba(212, 175, 55, 0.2); color: var(--gold-accent); border: 1px solid var(--gold-accent); }
+        .tag.regular { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); border: 1px solid var(--text-muted); }
+
+        /* Imagens */
         .img-container {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
             position: relative;
-            background-color: var(--bg-color); /* Força o fundo alvo */
+        }
+        
+        /* Se a imagem não estiver dentro de um card, garante o fundo da apresentação para o blend funcionar */
+        .img-container:not(.glass-card) {
+            background-color: var(--bg-dark);
         }
 
         .img-container img {
-            max-width: 100%;
-            max-height: 60vh;
-            object-fit: contain;
-            filter: invert(1) hue-rotate(180deg);
-            mix-blend-mode: lighten; /* Mescla o preto gerado pelo invert com o bg-color do container */
-            border-radius: 4px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background: var(--card-bg);
             border-radius: 12px;
-            overflow: hidden;
-            font-size: 1.2rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-height: 50vh;
+            object-fit: contain;
+            /* Inverte as cores e aplica o lighten para o fundo preto da imagem virar a cor de fundo do container */
+            filter: invert(1) hue-rotate(180deg);
+            mix-blend-mode: lighten;
         }
 
-        th, td {
-            padding: 1.2rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background: rgba(225, 29, 72, 0.15);
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        tr.winner {
-            background: rgba(16, 185, 129, 0.1);
-            border-left: 6px solid var(--success-color);
-            position: relative;
-        }
-        
-        tr.winner td {
-            font-weight: bold;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .tag.premium { background: rgba(225, 29, 72, 0.2); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.5); }
-        .tag.regular { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.5); }
-
-        .slide-number {
-            position: absolute;
-            bottom: 2rem;
-            right: 3rem;
-            font-size: 1rem;
-            color: #475569;
-            font-weight: 600;
-        }
-
-        /* Funnel/Pyramid visual */
-        .pyramid-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 2rem;
-        }
+        /* Pirâmide/Funil Visual */
+        .pyramid { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 30px; }
         .pyramid-level {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-            border-radius: 4px;
+            display: flex; justify-content: center; align-items: center;
+            color: #fff; font-weight: bold; border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .pyramid-level.bottom {
-            width: 80%;
-            height: 60px;
-            background: linear-gradient(90deg, #1e293b, #334155);
-            border-bottom: 3px solid #0f172a;
-        }
-        .pyramid-level.top {
-            width: 40%;
-            height: 70px;
-            background: linear-gradient(90deg, #e11d48, #f43f5e);
-            border-bottom: 3px solid #9f1239;
-            box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
-        }
+        .pyramid .top { width: 40%; height: 60px; background: linear-gradient(135deg, var(--gold-accent), #9e8125); font-size: 1.1em;}
+        .pyramid .bottom { width: 80%; height: 80px; background: linear-gradient(135deg, var(--wine-primary), var(--wine-dark)); font-size: 1.2em;}
 
+        /* Lista estilizada com ícones */
+        .icon-list { list-style: none; padding: 0; }
+        .icon-list li { margin-bottom: 15px; display: flex; align-items: flex-start; }
+        .icon-list i { color: var(--wine-primary); margin-right: 15px; margin-top: 5px; font-size: 1.2em; }
     </style>
 </head>
 <body>
 
-    <section id="capa">
-        <div class="reveal">
-            <h1 style="text-align: center;">Classificação de Qualidade de Vinhos<br>com Machine Learning</h1>
-            <h3 style="text-align: center; margin-top: 1rem;">Tech Challenge - Pós-Tech Data Analytics - Fase 2</h3>
-        </div>
-        <div class="reveal delay-1">
-            <p style="text-align: center; margin-top: 3rem; font-size: 1.5rem;">
-                Uma abordagem baseada em dados para otimização da produção vinícola.
-            </p>
-        </div>
-        <div class="slide-number">1 / 8</div>
-    </section>
+    <div class="reveal">
+        <div class="slides">
 
-    <section id="problema">
-        <h2 class="reveal">O Problema</h2>
-        <div class="grid-2">
-            <div class="reveal delay-1">
-                <p>Na indústria vitivinícola, a avaliação da qualidade tradicionalmente depende de <strong>testes sensoriais humanos</strong> realizados por enólogos.</p>
-                <p>Desafios críticos para a escala de produção:</p>
-                <ul>
-                    <li><strong>Subjetivo:</strong> Dependente da experiência do avaliador.</li>
-                    <li><strong>Lento:</strong> Cria gargalos na liberação de lotes.</li>
-                    <li><strong>Caro:</strong> Custo alto em manter painéis de degustação frequentes.</li>
-                </ul>
-                <p style="margin-top: 2rem;"><strong>A Oportunidade:</strong> Utilizar dados físico-químicos rotineiros para criar um modelo de predição.</p>
-            </div>
-            <div class="card reveal delay-2">
-                <h4>Objetivo do Negócio</h4>
-                <div class="metric" style="font-size: 3rem; margin-top: 1rem; color: var(--text-color);">Precisão</div>
-                <h3 style="margin-top: 1rem; color: var(--accent-color); font-weight: bold;">Prever a Qualidade</h3>
-                <p style="margin-top: 1rem; font-size: 1.1rem;">Antes mesmo da avaliação sensorial, classificando automaticamente lotes com alto potencial comercial.</p>
-            </div>
-        </div>
-        <div class="slide-number">2 / 8</div>
-    </section>
+            <!-- CAPA -->
+            <section data-background-gradient="radial-gradient(circle at center, #2a0815 0%, #121011 70%)">
+                <h1 class="r-fit-text">Qualidade de Vinhos<br><span style="color: var(--gold-accent);">Machine Learning</span></h1>
+                <h3>Tech Challenge - Pós-Tech Data Analytics - Fase 2</h3>
+                <p style="margin-top: 40px; font-size: 1.2em; font-style: italic;">
+                    Uma abordagem baseada em dados para otimização da produção vinícola.
+                </p>
+            </section>
 
-    <section id="dados">
-        <h2 class="reveal">Os Dados (A Agulha no Palheiro)</h2>
-        <div class="grid-2">
-            <div class="reveal delay-1">
-                <p>Analisamos um conjunto de dados públicos contendo informações de produção. Nosso foco é <strong>encontrar os vinhos de Alta Qualidade (Premium)</strong>, que são muito raros.</p>
-                <div class="pyramid-container">
-                    <div class="pyramid-level top">
-                        159 Premium (~14%)
+            <!-- O PROBLEMA -->
+            <section>
+                <h2>O Problema <i class="fa-solid fa-wine-glass-empty" style="color: var(--wine-primary);"></i></h2>
+                <div class="grid-2">
+                    <div style="text-align: left;">
+                        <p>A avaliação da qualidade na indústria vitivinícola tradicionalmente depende de <strong>testes sensoriais humanos</strong> realizados por enólogos.</p>
+                        <p>Desafios críticos:</p>
+                        <ul class="icon-list">
+                            <li class="fragment"><i class="fa-solid fa-user-check"></i> <div><strong>Subjetivo:</strong> Depende da experiência do avaliador.</div></li>
+                            <li class="fragment"><i class="fa-solid fa-hourglass-half"></i> <div><strong>Lento:</strong> Cria gargalos na liberação de lotes.</div></li>
+                            <li class="fragment"><i class="fa-solid fa-money-bill-wave"></i> <div><strong>Caro:</strong> Custo alto em manter painéis constantes.</div></li>
+                        </ul>
                     </div>
-                    <div class="pyramid-level bottom">
-                        984 Comuns (~86%)
+                    <div class="glass-card fragment fade-left">
+                        <i class="fa-solid fa-bullseye" style="font-size: 2.5em; color: var(--gold-accent);"></i>
+                        <h4 style="margin-top: 15px; color: var(--text-main);">Objetivo do Negócio</h4>
+                        <div class="metric">Prever a Qualidade</div>
+                        <p style="margin-top: 15px;">Classificar automaticamente lotes com alto potencial comercial através de dados físico-químicos antes da avaliação sensorial.</p>
                     </div>
                 </div>
-                <p style="text-align: center; margin-top: 1rem; font-size: 1rem;">Total: 1.143 Amostras Analisadas</p>
-            </div>
-            <div class="img-container reveal delay-2">
-                <img src="../results/figures/target_balance.png" alt="Balanceamento do Target">
-            </div>
-        </div>
-        <div class="slide-number">3 / 8</div>
-    </section>
+            </section>
 
-    <section id="eda">
-        <h2 class="reveal">Análise Exploratória (EDA)</h2>
-        <p class="reveal delay-1">Quais fatores químicos mais se correlacionam com vinhos classificados como Alta Qualidade (Nota &ge; 7)?</p>
-        <div class="grid-2 reveal delay-2">
-            <div>
-                <div class="img-container" style="margin-bottom: 2rem;">
-                    <img src="../results/figures/target_correlation_barplot.png" alt="Correlação com Target">
+            <!-- OS DADOS -->
+            <section>
+                <h2>A Agulha no Palheiro <i class="fa-solid fa-database" style="color: var(--wine-primary);"></i></h2>
+                <div class="grid-2">
+                    <div style="text-align: left;">
+                        <p>Nosso foco é encontrar os vinhos de <strong>Alta Qualidade (Premium)</strong>, que representam uma minoria absoluta na produção.</p>
+                        
+                        <div class="pyramid fragment fade-up">
+                            <div class="pyramid-level top">159 Premium (~14%)</div>
+                            <div class="pyramid-level bottom">984 Comuns (~86%)</div>
+                        </div>
+                        <p style="text-align: center; margin-top: 20px;"><em>Total: 1.143 Amostras Analisadas</em></p>
+                    </div>
+                    <div class="img-container fragment">
+                        <img src="../results/figures/target_balance.png" alt="Balanceamento do Target">
+                    </div>
                 </div>
-                <p>O <strong>Teor Alcoólico</strong> (Alcohol) apresentou a maior correlação positiva. Vinhos com maior teor alcoólico tendem a ser mais bem avaliados.</p>
-            </div>
-            <div>
-                <div class="img-container" style="margin-bottom: 2rem;">
-                    <img src="../results/figures/correlation_matrix_pearson.png" alt="Matriz de Correlação">
+            </section>
+
+            <!-- EDA -->
+            <section>
+                <h2>Análise Exploratória <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--wine-primary);"></i></h2>
+                <p>Quais fatores químicos mais se correlacionam com vinhos classificados como <strong>Alta Qualidade (Nota &ge; 7)</strong>?</p>
+                
+                <div class="grid-2" style="margin-top: 30px;">
+                    <div class="fragment fade-up">
+                        <div class="img-container glass-card" style="padding: 15px; margin-bottom: 20px;">
+                            <img src="../results/figures/target_correlation_barplot.png" alt="Correlação com Target">
+                        </div>
+                        <p style="text-align: left;"><i class="fa-solid fa-arrow-trend-up" style="color: #4CAF50;"></i> O <strong>Teor Alcoólico</strong> apresentou a maior correlação positiva.</p>
+                    </div>
+                    <div class="fragment fade-up" data-fragment-index="2">
+                        <div class="img-container glass-card" style="padding: 15px; margin-bottom: 20px;">
+                            <img src="../results/figures/correlation_matrix_pearson.png" alt="Matriz de Correlação">
+                        </div>
+                        <p style="text-align: left;"><i class="fa-solid fa-arrow-trend-down" style="color: var(--wine-primary);"></i> A <strong>Acidez Volátil</strong> possui forte correlação negativa (sabor avinagrado).</p>
+                    </div>
                 </div>
-                <p>A <strong>Acidez Volátil</strong> apresentou correlação negativa forte, indicando que níveis altos depreciam o produto (sabor avinagrado).</p>
-            </div>
-        </div>
-        <div class="slide-number">4 / 8</div>
-    </section>
+            </section>
 
-    <section id="modelo">
-        <h2 class="reveal">O Modelo Preditivo</h2>
-        <p class="reveal delay-1">Focamos no <strong>F1-Score da Classe Minoritária (Premium)</strong>, que equilibra a capacidade de encontrar os vinhos bons sem dar falsos alarmes.</p>
-        
-        <table class="reveal delay-2">
-            <thead>
-                <tr>
-                    <th>Modelo</th>
-                    <th>F1-Score (C1)</th>
-                    <th>Precision (C1)</th>
-                    <th>Recall (C1)</th>
-                    <th>ROC-AUC</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Regressão Logística</td>
-                    <td>0.467</td>
-                    <td>0.362</td>
-                    <td>0.656</td>
-                    <td>0.863</td>
-                </tr>
-                <tr>
-                    <td>Random Forest</td>
-                    <td>0.560</td>
-                    <td>0.778</td>
-                    <td>0.438</td>
-                    <td>0.912</td>
-                </tr>
-                <tr class="winner">
-                    <td>Gradient Boosting (Hist)</td>
-                    <td>0.677</td>
-                    <td>0.700</td>
-                    <td>0.656</td>
-                    <td>0.897</td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- O MODELO PREDITIVO -->
+            <section>
+                <h2>O Modelo Preditivo <i class="fa-solid fa-microchip" style="color: var(--wine-primary);"></i></h2>
+                <p>Focamos no <strong>F1-Score da Classe Minoritária</strong>, equilibrando a detecção de vinhos bons sem gerar falsos alarmes.</p>
+                
+                <table class="fragment">
+                    <thead>
+                        <tr>
+                            <th>Modelo</th>
+                            <th>F1-Score (Premium)</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Regressão Logística</td>
+                            <td>0.467</td>
+                            <td>0.362</td>
+                            <td>0.656</td>
+                            <td>0.863</td>
+                        </tr>
+                        <tr>
+                            <td>Random Forest</td>
+                            <td>0.560</td>
+                            <td>0.778</td>
+                            <td>0.438</td>
+                            <td>0.912</td>
+                        </tr>
+                        <tr class="winner fragment highlight-current-blue">
+                            <td><i class="fa-solid fa-trophy" style="color: var(--gold-accent); margin-right: 5px;"></i> Gradient Boosting</td>
+                            <td>0.677</td>
+                            <td>0.700</td>
+                            <td>0.656</td>
+                            <td>0.897</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-        <div class="grid-2 reveal delay-3" style="margin-top: 3rem;">
-            <div class="img-container">
-                <img src="../results/figures/model_comparison.png" alt="Comparação de Modelos">
-            </div>
-            <div class="img-container">
-                <img src="../results/figures/confusion_matrices.png" alt="Matrizes de Confusão">
-            </div>
-        </div>
-        <div class="slide-number">5 / 8</div>
-    </section>
+            <!-- SHAP EXPLAINABILITY -->
+            <section>
+                <h2>Decisões Explicáveis <i class="fa-solid fa-brain" style="color: var(--wine-primary);"></i></h2>
+                <p>O modelo não é uma "caixa preta". A técnica <strong>SHAP</strong> mapeia as decisões.</p>
+                
+                <div class="grid-2">
+                    <div style="text-align: left;" class="fragment">
+                        <ul class="icon-list" style="font-size: 0.9em;">
+                            <li><i class="fa-solid fa-flask"></i> <div><strong>Sulfatos:</strong> Protegem aroma e cor. Fundamentais para a classe premium.</div></li>
+                            <li><i class="fa-solid fa-scale-balanced"></i> <div><strong>Razão Álcool/Densidade:</strong> Captura o corpo e a leveza do vinho.</div></li>
+                            <li><i class="fa-solid fa-triangle-exclamation"></i> <div><strong>Acidez Volátil:</strong> Índices altos indicam problemas graves de fermentação.</div></li>
+                            <li><i class="fa-solid fa-temperature-half"></i> <div><strong>Teor Alcoólico:</strong> Boa maturação da uva.</div></li>
+                        </ul>
+                    </div>
+                    <div class="img-container glass-card fragment">
+                        <img src="../results/figures/shap_summary.png" alt="SHAP Summary">
+                    </div>
+                </div>
+            </section>
 
-    <section id="shap">
-        <h2 class="reveal">Decisões Explicáveis (SHAP)</h2>
-        <p class="reveal delay-1">O modelo Gradient Boosting não é uma "caixa preta". Utilizando a técnica SHAP, mapeamos exatamente <strong>por que</strong> o modelo classifica um vinho como Premium.</p>
-        
-        <div class="grid-2">
-            <div class="reveal delay-2">
-                <ol style="color: #cbd5e1; margin-left: 2rem; line-height: 1.8;">
-                    <li><strong style="color: var(--text-color);">Sulfatos:</strong> Conservantes e antioxidantes. Níveis adequados protegem aroma e cor.</li>
-                    <li><strong style="color: var(--text-color);">Razão Álcool/Densidade:</strong> Captura o corpo e a leveza do vinho simultaneamente.</li>
-                    <li><strong style="color: var(--text-color);">Acidez Volátil:</strong> Impacto negativo. Índices altos indicam problemas graves de fermentação.</li>
-                    <li><strong style="color: var(--text-color);">Teor Alcoólico:</strong> Indica boa maturação da uva e fermentação completa.</li>
-                    <li><strong style="color: var(--text-color);">Enxofre Livre/Total:</strong> Indica a eficiência da proteção antioxidante no líquido.</li>
-                </ol>
-            </div>
-            <div class="img-container reveal delay-3">
-                <img src="../results/figures/shap_summary.png" alt="SHAP Summary">
-            </div>
-        </div>
-        <div class="slide-number">6 / 8</div>
-    </section>
+            <!-- AÇÃO EM PRODUÇÃO -->
+            <section>
+                <h2>Régua de Ação em Produção <i class="fa-solid fa-gears" style="color: var(--wine-primary);"></i></h2>
+                <p>Automação da triagem antes do engarrafamento, baseada no Score preditivo.</p>
+                
+                <table class="fragment" style="margin-bottom: 30px;">
+                    <thead>
+                        <tr>
+                            <th>Score do Modelo</th>
+                            <th>Classificação</th>
+                            <th>Ação Recomendada na Vinícola</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color: #4CAF50; font-weight: bold; font-size: 1.2em;">&ge; 80%</td>
+                            <td><span class="tag premium">Alto Potencial Premium</span></td>
+                            <td>Linha de envelhecimento especial (barricas de carvalho); <strong>precificação elevada</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--gold-accent); font-weight: bold; font-size: 1.2em;">50% a 79%</td>
+                            <td><span class="tag regular">Intermediária</span></td>
+                            <td><strong>Revisão pelo enólogo chefe</strong> para ajustes químicos finos.</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--wine-primary); font-weight: bold; font-size: 1.2em;">&lt; 50%</td>
+                            <td><span class="tag regular">Lote Comum</span></td>
+                            <td>Destinar para vinho de mesa rápido. Evitar uso de barricas caras.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-    <section id="impacto">
-        <h2 class="reveal">Régua de Ação em Produção</h2>
-        <p class="reveal delay-1">Proposta de automação da triagem antes do engarrafamento, baseada na probabilidade calculada pelo modelo.</p>
-        
-        <table class="reveal delay-2" style="margin-bottom: 3rem;">
-            <thead>
-                <tr>
-                    <th>Score do Modelo</th>
-                    <th>Classificação do Lote</th>
-                    <th>Ação Recomendada (Produção)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span style="color: var(--success-color); font-weight: bold;">&ge; 80%</span></td>
-                    <td><span class="tag premium">Alto Potencial Premium</span></td>
-                    <td>Linha de envelhecimento especial (barricas de carvalho); <strong>precificação elevada</strong>.</td>
-                </tr>
-                <tr>
-                    <td><span style="color: var(--warning-color); font-weight: bold;">50% a 79%</span></td>
-                    <td><span class="tag regular">Qualidade Intermediária</span></td>
-                    <td><strong>Revisão pelo enólogo chefe</strong> para ajustes químicos finos antes de fechar o lote.</td>
-                </tr>
-                <tr>
-                    <td><span style="color: var(--accent-color); font-weight: bold;">&lt; 50%</span></td>
-                    <td><span class="tag regular">Lote Comum</span></td>
-                    <td>Destinar para marcas de entrada ou <strong>vinho de mesa</strong> rápido. Evitar barricas.</td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- CONCLUSÃO -->
+            <section data-background-gradient="radial-gradient(circle at center, #121011 0%, #2a0815 100%)">
+                <i class="fa-solid fa-award" style="font-size: 4em; color: var(--gold-accent); margin-bottom: 20px;"></i>
+                <h2>Conclusão</h2>
+                <p class="fragment" style="font-size: 1.2em; max-width: 800px; margin: 0 auto 30px;">
+                    O <strong>Gradient Boosting</strong> demonstrou ser uma ferramenta altamente viável. 
+                    Atingimos <strong>91% de acurácia global</strong> com forte capacidade na classe premium.
+                </p>
+                <div class="glass-card fragment" style="max-width: 800px; margin: 0 auto; border-color: var(--gold-accent);">
+                    <p style="color: var(--gold-accent); font-size: 1.1em; font-family: 'Playfair Display', serif; font-style: italic; margin: 0;">
+                        "Mais do que apenas prever, a interpretabilidade revelou alavancas acionáveis que os produtores podem ajustar durante a fermentação."
+                    </p>
+                </div>
+            </section>
 
-        <div class="card reveal delay-3">
-            <h4>Resultado Esperado</h4>
-            <p style="margin: 0; color: var(--text-color); font-size: 1.3rem;">
-                Economia do tempo dos especialistas, redução de desperdício em barricas caras e padronização da detecção de qualidade premium.
-            </p>
         </div>
-        <div class="slide-number">7 / 8</div>
-    </section>
+    </div>
 
-    <section id="conclusao">
-        <div class="reveal">
-            <h1 style="text-align: center; width: 100%; border: none;">Conclusão</h1>
-        </div>
-        <div class="reveal delay-1">
-            <p style="text-align: center; max-width: 900px; margin: 3rem auto 2rem; font-size: 1.6rem;">
-                O <strong>Gradient Boosting</strong> demonstrou ser altamente viável para modernizar o controle de qualidade. 
-                Atingimos <strong>91% de acurácia global</strong> e um bom equilíbrio na detecção da classe premium.
-            </p>
-        </div>
-        <div class="reveal delay-2">
-            <p style="text-align: center; max-width: 900px; margin: 0 auto; font-size: 1.6rem; color: var(--accent-color); font-weight: 600;">
-                Mais do que apenas prever, a interpretabilidade revelou alavancas acionáveis (Sulfatos e Acidez) que os produtores podem ajustar durante a fermentação.
-            </p>
-        </div>
-        <div class="slide-number">8 / 8</div>
-    </section>
-
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
     <script>
-        // Navegação de Slides
-        const sections = document.querySelectorAll('section');
-        let currentSlide = 0;
-        let isAnimating = false;
-
-        function scrollToSlide(index) {
-            if (index < 0 || index >= sections.length) return;
-            isAnimating = true;
-            currentSlide = index;
-            sections[currentSlide].scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => { isAnimating = false; }, 800);
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (isAnimating) return;
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-                e.preventDefault(); scrollToSlide(currentSlide + 1);
-            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
-                e.preventDefault(); scrollToSlide(currentSlide - 1);
-            }
-        });
-
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const scrollPosition = window.scrollY + (window.innerHeight / 2);
-                sections.forEach((section, index) => {
-                    if (section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
-                        currentSlide = index;
-                    }
-                });
-            }, 100);
-        });
-
-        // Intersection Observer para as Animações "Reveal"
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.reveal').forEach((el) => {
-            observer.observe(el);
+        Reveal.initialize({
+            controls: true,           // Mostra setas de navegação
+            progress: true,           // Barra de progresso no rodapé
+            center: true,             // Centraliza verticalmente os slides
+            hash: true,               // Salva o slide na URL
+            transition: 'slide',      // Tipo de transição (none/fade/slide/convex/concave/zoom)
+            backgroundTransition: 'fade',
+            
+            // Configurações para telas diferentes
+            width: 1200,
+            height: 700,
+            margin: 0.1,
+            minScale: 0.2,
+            maxScale: 2.0
         });
     </script>
 </body>
