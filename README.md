@@ -184,7 +184,42 @@ Esse validador executará o download do dataset usando `kagglehub` (com fallback
 
 ---
 
-## Próximos Passos de Desenvolvimento
-1. **Fase 6: Interpretação dos Modelos**: Uso de SHAP e análise de importância de atributos para explicabilidade (`notebooks/03_interpretabilidade.ipynb`).
-2. **Fase 7: Storytelling Executivo e Apresentação**: Construção do material dinâmico em HTML/JS integrado para a diretoria, simulador de predições e roteiro para o vídeo de pitch de 5 minutos.
+## Fase 6 - Interpretação e Storytelling (Concluído)
+
+Nesta fase final, analisamos a explicabilidade do modelo vencedor usando SHAP e construímos os materiais de apresentação executiva.
+
+### Análise SHAP (Explicabilidade)
+O método SHAP (SHapley Additive exPlanations) foi utilizado para identificar quais variáveis mais influenciam a classificação de qualidade premium:
+
+| Posição | Variável | Importância SHAP |
+|---|---|---|
+| 1 | Sulfatos | 1.96 |
+| 2 | Razão Álcool/Densidade | 1.23 |
+| 3 | Acidez Volátil | 1.16 |
+| 4 | Teor Alcoólico | 0.92 |
+| 5 | Razão de Enxofre (Livre/Total) | 0.82 |
+
+* **Gráficos SHAP**: [results/figures/](results/figures/) (shap_summary.png, shap_bar.png, shap_dependence_*.png)
+* **Ranking e Insights**: [results/metrics/shap_feature_ranking.json](results/metrics/shap_feature_ranking.json)
+* **Relatório de Interpretabilidade**: [results/interpretability_report.md](results/interpretability_report.md)
+* **Notebook Interativo**: [notebooks/03_interpretabilidade.ipynb](notebooks/03_interpretabilidade.ipynb)
+
+### Apresentação Executiva
+* **Apresentação HTML**: [presentation/index.html](presentation/index.html) — Abra no navegador para visualizar. Exporte para PDF com `Ctrl+P`.
+
+### Como Executar a Fase 6 Localmente:
+```bash
+.\.venv\Scripts\python.exe -m src.interpretability_generator
+```
+
+---
+
+## Entregáveis do Tech Challenge
+
+| Entregável | Localização |
+|---|---|
+| Repositório GitHub | [github.com/valo793/Wine-Quality-ML-Model](https://github.com/valo793/Wine-Quality-ML-Model) |
+| Apresentação Executiva | [presentation/index.html](presentation/index.html) |
+| Notebooks de Análise | [notebooks/](notebooks/) |
+| Gráficos e Métricas | [results/](results/) |
 

@@ -26,3 +26,8 @@ results/models/*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Private files (not for GitHub)
+presentation/roteiro_video.md
+Projects/
+update_notebook.py

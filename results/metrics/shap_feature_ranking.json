@@ -1,0 +1,107 @@
+[
+    {
+        "rank": 1,
+        "feature": "sulphates",
+        "feature_label": "Sulfatos",
+        "mean_abs_shap": 1.9618428714769283,
+        "insight": "Os sulfatos contribuem positivamente para a qualidade, atuando como conservantes e antioxidantes. Niveis adequados protegem o aroma e a cor do vinho durante o armazenamento."
+    },
+    {
+        "rank": 2,
+        "feature": "alcohol_density_ratio",
+        "feature_label": "Razao Alcool/Densidade",
+        "mean_abs_shap": 1.2337452980967054,
+        "insight": "Feature engenheirada que captura simultaneamente o corpo e a leveza do vinho. Valores elevados indicam vinhos com boa estrutura alcoolica e baixa densidade."
+    },
+    {
+        "rank": 3,
+        "feature": "volatile acidity",
+        "feature_label": "Acidez Volatil",
+        "mean_abs_shap": 1.1573920051044237,
+        "insight": "A acidez volatil (acido acetico) impacta negativamente a qualidade. Niveis elevados indicam problemas de fermentacao ou contaminacao bacteriana, resultando em sabores avinagrados que depreciam o produto."
+    },
+    {
+        "rank": 4,
+        "feature": "alcohol",
+        "feature_label": "Teor Alcoolico",
+        "mean_abs_shap": 0.9213987069950494,
+        "insight": "O teor alcoolico e o fator mais influente na classificacao de qualidade. Vinhos com teor alcoolico mais elevado tendem a ser classificados como premium, o que reflete a relacao entre maturacao da uva, fermentacao completa e corpo do vinho."
+    },
+    {
+        "rank": 5,
+        "feature": "sulfur_ratio",
+        "feature_label": "Razao de Enxofre (Livre/Total)",
+        "mean_abs_shap": 0.8208091764458192,
+        "insight": "A proporcao de enxofre livre sobre o total indica a eficiencia da protecao antioxidante. Razoes mais altas sugerem melhor conservacao."
+    },
+    {
+        "rank": 6,
+        "feature": "citric acid",
+        "feature_label": "Acido Citrico",
+        "mean_abs_shap": 0.8043703117533013,
+        "insight": "O acido citrico adiciona frescor e complexidade ao sabor. Vinhos premium geralmente apresentam niveis moderados dessa substancia."
+    },
+    {
+        "rank": 7,
+        "feature": "density",
+        "feature_label": "Densidade",
+        "mean_abs_shap": 0.7208950809212535,
+        "insight": "A densidade esta inversamente relacionada ao teor alcoolico e diretamente ao acucar residual. Vinhos mais leves e secos tendem a receber notas superiores."
+    },
+    {
+        "rank": 8,
+        "feature": "total sulfur dioxide",
+        "feature_label": "Dioxido de Enxofre Total",
+        "mean_abs_shap": 0.7104928434503319,
+        "insight": "O dioxido de enxofre total em excesso pode mascarar aromas delicados. O modelo identifica que niveis controlados favorecem a qualidade."
+    },
+    {
+        "rank": 9,
+        "feature": "chlorides",
+        "feature_label": "Cloretos",
+        "mean_abs_shap": 0.6281284928502796,
+        "insight": ""
+    },
+    {
+        "rank": 10,
+        "feature": "free sulfur dioxide",
+        "feature_label": "Dioxido de Enxofre Livre",
+        "mean_abs_shap": 0.5513058498541826,
+        "insight": ""
+    },
+    {
+        "rank": 11,
+        "feature": "sugar_alcohol_ratio",
+        "feature_label": "Razao Acucar/Alcool",
+        "mean_abs_shap": 0.49236945177522873,
+        "insight": ""
+    },
+    {
+        "rank": 12,
+        "feature": "pH",
+        "feature_label": "pH",
+        "mean_abs_shap": 0.4153553486642893,
+        "insight": ""
+    },
+    {
+        "rank": 13,
+        "feature": "residual sugar",
+        "feature_label": "Acucar Residual",
+        "mean_abs_shap": 0.40685528594125464,
+        "insight": ""
+    },
+    {
+        "rank": 14,
+        "feature": "acidity_balance",
+        "feature_label": "Equilibrio de Acidez",
+        "mean_abs_shap": 0.36495232018073087,
+        "insight": ""
+    },
+    {
+        "rank": 15,
+        "feature": "fixed acidity",
+        "feature_label": "Acidez Fixa",
+        "mean_abs_shap": 0.23172626912427988,
+        "insight": ""
+    }
+]
