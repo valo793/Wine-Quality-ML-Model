@@ -142,15 +142,18 @@
             align-items: center;
             width: 100%;
             position: relative;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .img-container img {
             max-width: 100%;
             max-height: 60vh;
             object-fit: contain;
-            filter: invert(1) hue-rotate(180deg) brightness(1.2);
-            mix-blend-mode: screen;
             transition: transform 0.5s ease;
+            border-radius: 4px;
         }
 
         .img-container:hover img {
@@ -264,15 +267,15 @@
                 <p>Na indústria vitivinícola, a avaliação da qualidade tradicionalmente depende de <strong>testes sensoriais humanos</strong> realizados por enólogos.</p>
                 <p>Desafios críticos para a escala de produção:</p>
                 <ul>
-                    <li>🍷 <strong>Subjetivo:</strong> Dependente da experiência do avaliador.</li>
-                    <li>⏳ <strong>Lento:</strong> Cria gargalos na liberação de lotes.</li>
-                    <li>💰 <strong>Caro:</strong> Custo alto em manter painéis de degustação frequentes.</li>
+                    <li><strong>Subjetivo:</strong> Dependente da experiência do avaliador.</li>
+                    <li><strong>Lento:</strong> Cria gargalos na liberação de lotes.</li>
+                    <li><strong>Caro:</strong> Custo alto em manter painéis de degustação frequentes.</li>
                 </ul>
                 <p style="margin-top: 2rem;"><strong>A Oportunidade:</strong> Utilizar dados físico-químicos rotineiros para criar um modelo de predição.</p>
             </div>
             <div class="card reveal delay-2">
                 <h4>Objetivo do Negócio</h4>
-                <div class="metric" style="font-size: 4rem; margin-top: 1rem; color: var(--text-color);">🚀</div>
+                <div class="metric" style="font-size: 3rem; margin-top: 1rem; color: var(--text-color);">Precisão</div>
                 <h3 style="margin-top: 1rem; color: var(--accent-color); font-weight: bold;">Prever a Qualidade</h3>
                 <p style="margin-top: 1rem; font-size: 1.1rem;">Antes mesmo da avaliação sensorial, classificando automaticamente lotes com alto potencial comercial.</p>
             </div>
@@ -352,7 +355,7 @@
                     <td>0.912</td>
                 </tr>
                 <tr class="winner">
-                    <td>Gradient Boosting (Hist) 🏆</td>
+                    <td>Gradient Boosting (Hist)</td>
                     <td>0.677</td>
                     <td>0.700</td>
                     <td>0.656</td>
