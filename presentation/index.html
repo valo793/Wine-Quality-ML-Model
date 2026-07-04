@@ -142,16 +142,15 @@
             align-items: center;
             width: 100%;
             position: relative;
-            /* Aplicar o blend mode no container pai contorna bugs do Chrome/Edge com filters */
-            mix-blend-mode: lighten;
+            background-color: var(--bg-color); /* Força o fundo alvo */
         }
 
         .img-container img {
             max-width: 100%;
             max-height: 60vh;
             object-fit: contain;
-            /* Apenas inverte a cor aqui */
             filter: invert(1) hue-rotate(180deg);
+            mix-blend-mode: lighten; /* Mescla o preto gerado pelo invert com o bg-color do container */
             transition: transform 0.5s ease;
             border-radius: 4px;
         }
