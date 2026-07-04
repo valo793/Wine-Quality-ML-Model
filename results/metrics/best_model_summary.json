@@ -1,0 +1,9 @@
+{
+    "best_model": "Gradient Boosting (Hist)",
+    "selection_criterion": "F1-Score da Classe 1 (vinhos de alta qualidade)",
+    "f1_score_class_1": 0.6774193548387096,
+    "precision_class_1": 0.7,
+    "recall_class_1": 0.65625,
+    "roc_auc": 0.8967322335025381,
+    "accuracy": 0.9126637554585153
+}

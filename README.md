@@ -102,6 +102,35 @@ As seguintes entregas técnicas foram implementadas:
 .\.venv\Scripts\python.exe -m src.preprocessing_generator
 ```
 
+---
+
+## Fase 4-5 - Modelagem e Avaliacao (Implementado Localmente)
+> [!IMPORTANT]
+> **Status de Progresso**: Esta fase foi totalmente implementada e validada localmente. O melhor modelo foi selecionado, avaliado e salvo. Aguardando autorizacao para commit.
+
+Nesta etapa, o projeto avancou para o treinamento de algoritmos de Machine Learning visando classificar os vinhos em alta qualidade ou nao. Foram implementadas as seguintes entregas tecnicas:
+
+1. **Treinamento de Multiplos Modelos (`src/train.py`)**: Implementacao flexivel baseada em Pipelines do `scikit-learn` para evitar *data leakage*. Foram treinados 3 modelos com justificativas diferentes, configurados para lidar com o desbalanceamento de classes (`class_weight="balanced"`):
+   - **Regressao Logistica**: Baseline linear simples e muito rapido. Utilizou `StandardScaler`.
+   - **Random Forest**: Ensemble de arvores de decisao, robusto para capturar nao-linearidades. Dispensou scaler por ser invariante a escala.
+   - **Gradient Boosting (Hist)**: Implementacao nativa otimizada do scikit-learn baseada em histogramas (equivalente ao LightGBM), excelente desempenho para dados tabulares. Dispensou scaler.
+2. **Avaliacao e Selecao do Melhor Modelo (`src/evaluate.py`)**:
+   - Cada modelo gerou um Relatorio de Classificacao completo e Matriz de Confusao.
+   - O melhor modelo foi definido **estritamente** pelo `F1-Score da Classe 1`.
+   - O modelo vencedor foi o **Gradient Boosting (Hist)**.
+3. **Visualizacoes de Desempenho (`src/plots.py`)**:
+   - Matrizes de confusao lado a lado para cada classificador (`confusion_matrices.png`).
+   - Comparativo de metricas (F1, Precision, Recall, ROC-AUC) em formato de barra (`model_comparison.png`).
+   - Curvas ROC sobrepostas e comparadas graficamente (`roc_curves.png`).
+   - Analise de Importancia de Features para modelos de arvore (`feature_importance_*.png`).
+4. **Relatorio Consolidado em Markdown**: Todos os resultados, metricas e graficos foram injetados no relatorio principal de modelagem ([results/modeling_report.md](results/modeling_report.md)).
+5. **Serializacao do Modelo (`src/modeling_generator.py`)**: O pipeline completo do melhor classificador foi salvo em `results/models/best_model.pkl` atraves da biblioteca `joblib`, pronto para servir predicoes futuras.
+
+### Como Executar a Fase 4-5 Localmente:
+```bash
+.\.venv\Scripts\python.exe -m src.modeling_generator
+```
+
 
 ## Como Instalar as Dependências
 
@@ -156,9 +185,6 @@ Esse validador executará o download do dataset usando `kagglehub` (com fallback
 ---
 
 ## Próximos Passos de Desenvolvimento
-1. **Fase 3: Pré-processamento e Feature Engineering**: Implementação de variáveis de negócio no arquivo `src/features.py` (ex: `sulfur_ratio`, `acidity_balance`, `alcohol_density_ratio`, `sugar_alcohol_ratio`).
-2. **Fase 4: Modelagem**: Treinamento de pelo menos dois modelos de classificação (ex: Regressão Logística como baseline, Random Forest, XGBoost) no notebook `notebooks/02_modelagem.ipynb` e `src/train.py`.
-3. **Fase 5: Avaliação Comparativa**: Comparação sistemática de performance entre os modelos usando métricas estruturadas (`src/evaluate.py`).
-4. **Fase 6: Interpretação dos Modelos**: Uso de SHAP e análise de importância de atributos para explicabilidade (`notebooks/03_interpretabilidade.ipynb`).
-5. **Fase 7: Storytelling Executivo e Apresentação**: Construção do material dinâmico em HTML/JS integrado para a diretoria, simulador de predições e roteiro para o vídeo de pitch de 5 minutos.
+1. **Fase 6: Interpretação dos Modelos**: Uso de SHAP e análise de importância de atributos para explicabilidade (`notebooks/03_interpretabilidade.ipynb`).
+2. **Fase 7: Storytelling Executivo e Apresentação**: Construção do material dinâmico em HTML/JS integrado para a diretoria, simulador de predições e roteiro para o vídeo de pitch de 5 minutos.
 

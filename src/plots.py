@@ -296,3 +296,194 @@ def plot_outliers_overview(outliers_dict: dict, save_path: str):
     plt.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Gráfico salvo: {save_path}")
+
+
+# =============================================================================
+# FUNÇÕES DE VISUALIZAÇÃO PARA MODELAGEM (FASE 4-5)
+# =============================================================================
+
+def plot_confusion_matrices(results_dict: dict, save_path: str):
+    """
+    Gera um grid de matrizes de confusão lado a lado para cada modelo avaliado.
+    DPI = 300
+    
+    Parameters
+    ----------
+    results_dict : dict
+        Dicionário {model_display_name: metrics_dict} contendo 'confusion_matrix'.
+    save_path : str
+        Caminho de saída do gráfico.
+    """
+    from sklearn.metrics import ConfusionMatrixDisplay
+    
+    n_models = len(results_dict)
+    fig, axes = plt.subplots(1, n_models, figsize=(6 * n_models, 5))
+    
+    if n_models == 1:
+        axes = [axes]
+    
+    class_labels = ["Baixa/Média (0)", "Alta (1)"]
+    cmap = sns.color_palette("Blues", as_cmap=True)
+    
+    for i, (model_name, metrics) in enumerate(results_dict.items()):
+        cm = np.array(metrics["confusion_matrix"])
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_labels)
+        disp.plot(ax=axes[i], cmap=cmap, values_format="d", colorbar=False)
+        axes[i].set_title(f"{model_name}", fontsize=12, weight="bold", color="#1a202c", pad=10)
+        axes[i].set_xlabel("Predição", fontsize=10)
+        axes[i].set_ylabel("Real" if i == 0 else "", fontsize=10)
+    
+    plt.suptitle("Matrizes de Confusão — Comparação entre Modelos",
+                 fontsize=15, weight="bold", y=1.03, color="#1a202c")
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()
+    print(f"Gráfico salvo: {save_path}")
+
+
+def plot_roc_curves(roc_data: dict, save_path: str):
+    """
+    Gera curvas ROC sobrepostas para múltiplos modelos com AUC anotado na legenda.
+    DPI = 300
+    
+    Parameters
+    ----------
+    roc_data : dict
+        Dicionário {model_display_name: {"fpr": array, "tpr": array, "auc": float}}.
+    save_path : str
+        Caminho de saída do gráfico.
+    """
+    plt.figure(figsize=(8, 7))
+    
+    palette = [PRIMARY_COLOR, ACCENT_COLOR, HIGHLIGHT_COLOR, SECONDARY_COLOR, "#38a169", "#d69e2e"]
+    
+    for i, (model_name, data) in enumerate(roc_data.items()):
+        color = palette[i % len(palette)]
+        plt.plot(
+            data["fpr"], data["tpr"],
+            label=f"{model_name} (AUC = {data['auc']:.4f})",
+            color=color,
+            linewidth=2.2,
+        )
+    
+    # Linha de referência (classificador aleatório)
+    plt.plot([0, 1], [0, 1], "k--", linewidth=1, alpha=0.5, label="Classificador Aleatório (AUC = 0.5)")
+    
+    plt.title("Curvas ROC — Comparação entre Modelos",
+              fontsize=14, weight="bold", pad=15, color="#1a202c")
+    plt.xlabel("Taxa de Falsos Positivos (FPR)", fontsize=11, labelpad=8)
+    plt.ylabel("Taxa de Verdadeiros Positivos (TPR)", fontsize=11, labelpad=8)
+    plt.legend(loc="lower right", fontsize=10, frameon=True, fancybox=True, shadow=True)
+    plt.grid(True, alpha=0.3)
+    sns.despine()
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()
+    print(f"Gráfico salvo: {save_path}")
+
+
+def plot_model_comparison_bar(comparison_df: pd.DataFrame, save_path: str):
+    """
+    Gera gráfico de barras agrupadas comparando métricas entre modelos.
+    DPI = 300
+    
+    Parameters
+    ----------
+    comparison_df : pd.DataFrame
+        DataFrame com colunas: Modelo, F1-Score (Classe 1), Precision, Recall, ROC-AUC, Acurácia.
+    save_path : str
+        Caminho de saída do gráfico.
+    """
+    plt.figure(figsize=(12, 6))
+    
+    metrics_cols = [c for c in comparison_df.columns if c != "Modelo"]
+    
+    # Reshape para formato longo
+    melted = comparison_df.melt(id_vars="Modelo", value_vars=metrics_cols,
+                                 var_name="Métrica", value_name="Valor")
+    
+    palette = [PRIMARY_COLOR, ACCENT_COLOR, HIGHLIGHT_COLOR, SECONDARY_COLOR, "#38a169"]
+    
+    ax = sns.barplot(
+        data=melted,
+        x="Métrica",
+        y="Valor",
+        hue="Modelo",
+        palette=palette[:len(comparison_df)],
+        edgecolor="#2d3748",
+        linewidth=0.8,
+    )
+    
+    # Adiciona valores sobre as barras
+    for container in ax.containers:
+        ax.bar_label(container, fmt="%.3f", fontsize=8, padding=3, weight="bold", color="#2d3748")
+    
+    plt.title("Comparação de Métricas entre Modelos de Classificação",
+              fontsize=14, weight="bold", pad=15, color="#1a202c")
+    plt.xlabel("", fontsize=10)
+    plt.ylabel("Valor da Métrica", fontsize=11, labelpad=8)
+    plt.ylim(0, 1.12)
+    plt.legend(title="Modelo", frameon=True, fancybox=True, loc="upper right")
+    plt.xticks(rotation=15, ha="right")
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()
+    print(f"Gráfico salvo: {save_path}")
+
+
+def plot_feature_importance(importances: np.ndarray, feature_names: list, model_name: str, save_path: str, top_n: int = 15):
+    """
+    Gera gráfico de barras horizontal da importância das features para modelos baseados em árvore.
+    DPI = 300
+    
+    Parameters
+    ----------
+    importances : np.ndarray
+        Array de importâncias das features.
+    feature_names : list
+        Nomes das features correspondentes.
+    model_name : str
+        Nome do modelo para o título.
+    save_path : str
+        Caminho de saída do gráfico.
+    top_n : int, default=15
+        Número máximo de features a exibir.
+    """
+    plt.figure(figsize=(9, 6))
+    
+    # Ordena por importância
+    indices = np.argsort(importances)[::-1][:top_n]
+    sorted_features = [feature_names[i] for i in indices]
+    sorted_importances = importances[indices]
+    
+    # Inverte para exibir a mais importante no topo
+    sorted_features = sorted_features[::-1]
+    sorted_importances = sorted_importances[::-1]
+    
+    ax = sns.barplot(
+        x=sorted_importances,
+        y=sorted_features,
+        color=PRIMARY_COLOR,
+        edgecolor="none",
+    )
+    
+    # Adiciona valores
+    for i, p in enumerate(ax.patches):
+        width = p.get_width()
+        ax.annotate(
+            f" {width:.4f}",
+            (width, p.get_y() + p.get_height() / 2.),
+            ha="left", va="center",
+            fontsize=9, color="#2d3748", weight="bold",
+        )
+    
+    plt.title(f"Importância das Features — {model_name}",
+              fontsize=13, weight="bold", pad=15, color="#1a202c")
+    plt.xlabel("Importância (Gini / Ganho)", fontsize=10, labelpad=8)
+    plt.ylabel("")
+    sns.despine(left=True, bottom=True)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.close()
+    print(f"Gráfico salvo: {save_path}")

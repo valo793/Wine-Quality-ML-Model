@@ -1,0 +1,26 @@
+[
+    {
+        "Modelo":"Gradient Boosting (Hist)",
+        "F1-Score (Classe 1)":0.6774193548,
+        "Precision (Classe 1)":0.7,
+        "Recall (Classe 1)":0.65625,
+        "ROC-AUC":0.8967322335,
+        "Acurácia":0.9126637555
+    },
+    {
+        "Modelo":"Random Forest",
+        "F1-Score (Classe 1)":0.56,
+        "Precision (Classe 1)":0.7777777778,
+        "Recall (Classe 1)":0.4375,
+        "ROC-AUC":0.911643401,
+        "Acurácia":0.903930131
+    },
+    {
+        "Modelo":"Regressão Logística",
+        "F1-Score (Classe 1)":0.4666666667,
+        "Precision (Classe 1)":0.3620689655,
+        "Recall (Classe 1)":0.65625,
+        "ROC-AUC":0.862785533,
+        "Acurácia":0.7903930131
+    }
+]
